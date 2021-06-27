@@ -1,5 +1,11 @@
+const getLandingPage = (req, res) => {
+    res.sendFile('index3.html', { root: './views' });
+};
 const getLoginPage = (req, res) => {
-    res.send('loginPage from controller');
+    res.sendFile('login.html', { root: './views/pages/examples' });
 };
 
-module.exports = { getLoginPage };
+module.exports = {
+    getLoginPage,
+    getLandingPage
+};
