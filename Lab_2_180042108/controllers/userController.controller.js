@@ -9,7 +9,7 @@ const getRegisterPage = (req, res) => {
 };
 
 module.exports = {
-    getLoginPage,
     getLandingPage,
+    getLoginPage,
     getRegisterPage
 };
