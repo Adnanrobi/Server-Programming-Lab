@@ -1,8 +1,8 @@
-const user = require('../models/userModel.model');
+const User = require('../models/userModel.model');
 const bcrypt = require('bcryptjs');
 const alert = require('alert');
-const LocalStorage = require('node-localstorage').LocalStorage;
-localStorage = new LocalStorage('./scratch')
+//const LocalStorage = require('node-localstorage').LocalStorage;
+//localStorage = new LocalStorage('./scratch')
 
 
 const getLandingPage = (req, res) => {
@@ -23,7 +23,7 @@ const postRegister = async (req, res) => {
 
     try
     {
-        const user = await User.findone({ email });
+        const user = await User.findOne({ email });
         if (user)
         {
             alert("Already registered");
@@ -67,7 +67,7 @@ const postRegister = async (req, res) => {
     }    
 };
 
-const postLogin = (req, res) => {
+/*const postLogin = (req, res) => {
     const email = req.body.email;
     const pass = req.body.password;
     const existingUser = await User.findOne({ email });
@@ -92,12 +92,12 @@ const postLogin = (req, res) => {
         alert("You are not registered\nPlease create an account");
         res.redirect("/register");
     }
-};
+};*/
 
 module.exports = {
     getLandingPage,
     getLoginPage,
     getRegisterPage,
-    postRegister,
-    postLogin
+    postRegister
+    //postLogin
 };
