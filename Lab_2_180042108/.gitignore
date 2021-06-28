@@ -1,2 +1,7 @@
 /node_modules
 /public/plugins
+/views/dist
+/views/docs
+/views/pages
+/public/dist
+/views/plugins
