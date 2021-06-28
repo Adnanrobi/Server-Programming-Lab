@@ -6,7 +6,7 @@ localStorage = new LocalStorage('./scratch')
 
 
 const getLandingPage = (req, res) => {
-    res.sendFile('index3.html', { root: './views' });
+    res.sendFile('starter.html', { root: './views' });
 };
 const getLoginPage = (req, res) => {
     res.sendFile('login.html', { root: './views/pages/examples' });
@@ -77,7 +77,6 @@ const postLogin = async (req, res) => {
         if (passMatch)
         {
         localStorage.setItem("name", existingUser.name);
-        // res.cookie("fullname", existingUser.name);
 
         res.redirect("/dashboard");
         }
@@ -94,10 +93,15 @@ const postLogin = async (req, res) => {
     }
 };
 
+const getDashboard = (req, res) => {
+    res.sendFile('index3.html', { root: './views' });
+};
+
 module.exports = {
     getLandingPage,
     getLoginPage,
     getRegisterPage,
     postRegister,
-    postLogin
+    postLogin,
+    getDashboard
 };

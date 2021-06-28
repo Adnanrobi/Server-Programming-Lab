@@ -7,9 +7,8 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended : true}));
-app.use(userRoutes);
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
-
+app.use(userRoutes);
 
 module.exports = app;
