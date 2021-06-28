@@ -14,6 +14,7 @@ const postRegister = (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
+    const retype = req.body.retype;
 
     if (password.length < 6 || !name || !email) { return res.json({ message: 'Invalid Registration' }) }
     
