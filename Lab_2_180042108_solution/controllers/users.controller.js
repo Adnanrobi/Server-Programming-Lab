@@ -18,62 +18,67 @@ const getRegister = (req, res) => {
 
 const postRegister = (req, res) => {
     const { name, email, password, confirm_password } = req.body;
-
-    const errors = []
+  
+    //Data Validation
+    const errors = [];
     if (!name || !email || !password || !confirm_password) {
-        errors.push("All fields are required");
+      errors.push("All fields are required!");
     }
     if (password.length < 6) {
-        errors.push("Passwords must be at least 6 characters");
+      errors.push("Password must be at least 6 characters!");
     }
     if (password !== confirm_password) {
-        errors.push("Passwords do not match");
+      errors.push("Passwords do not match!");
     }
+  
     if (errors.length > 0) {
-        req.flash('errors', errors);
-        res.redirect("/users/register");
+      req.flash("errors", errors);
+      res.redirect("/users/register");
     } else {
-        //Create a new user:
-        User.findOne({ email: email }).then((user) => {
-            if (user) {
-                errors.push("this email is already registered");
-                req.flash('errors', errors);
-                res.redirect("/users/register");
+      //Create New User
+      User.findOne({ email: email }).then((user) => {
+        if (user) {
+          errors.push("User already exists with this email!");
+          req.flash("errors", errors);
+          res.redirect("/users/register");
+        } else {
+          bcrypt.genSalt(10, (err, salt) => {
+            if (err) {
+              errors.push(err);
+              req.flash("errors", errors);
+              res.redirect("/users/register");
             } else {
-                bcrypt.genSalt(8, (err, salt) => {
-                    if (err) {
-                        errors.push(err);
-                        req.flash('errors', errors);
-                        res.redirect("/users/register");
-                    } else {
-                        bcrypt.hash(password, salt, (err, hash) => {
-                            if (err) {
-                                errors.push(err);
-                                req.flash('errors', errors);
-                                res.redirect("/users/register");
-                            } else {
-                                const newUser = new User({
-                                    name, email, password: hash
-                                });
-                                newUser
-                                    .save()
-                                    .then(() => {
-                                    res.redirect("/users/login");
-                                    })
-                                    .catch(() => {
-                                        errors.push("Saving user in Database failed");
-                                        req.flash(errors);
-                                        res.redirect("/users/register")
-                                    })
-                            }
-                        })
-                    }
-                })
+              bcrypt.hash(password, salt, (err, hash) => {
+                if (err) {
+                  errors.push(err);
+                  req.flash("errors", errors);
+                  res.redirect("/users/register");
+                } else {
+                  const newUser = new User({
+                    name,
+                    email,
+                    password: hash,
+                  });
+                  newUser
+                    .save()
+                    .then(() => {
+                      res.redirect("/users/login");
+                    })
+                      .catch((err) => {
+                          console.log(err);
+                      errors.push("Saving User to the daatabase failed!");
+                      req.flash("errors", errors);
+                      res.redirect("/users/register");
+                    });
+                }
+              });
             }
-        });
+          });
+        }
+      });
     }
-    
-};
+  };
+  
 
 //Data validation:
 
