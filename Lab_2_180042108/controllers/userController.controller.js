@@ -29,17 +29,17 @@ const postRegister = async (req, res) => {
             alert("Already registered");
             res.redirect("/login")
         }
-        else if (password.length < 6)
+        if (password.length < 6)
         {
             alert("Password must be at least 6 characters!");
             res.redirect("/register");
         }
-        else if (password !== retype)
+        if (password !== retype)
         {
             alert("Retype the password properly")
             res.redirect("/register");
         }
-        else if (!name || !email || !password || !retype)
+        if (!name || !email || !password || !retype)
         {
             alert("fields can't be empty")
             res.redirect("/register");
