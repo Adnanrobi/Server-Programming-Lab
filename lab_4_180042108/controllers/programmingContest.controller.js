@@ -7,8 +7,6 @@ const getPC=(req,res)=>{
 
 const postPC=(req,res)=>{
     const{teamname,institution,coachname,coachcontact,coachemail,coachtshirt,leadername,leadercontact,leaderemail,leadertshirt,member1name,member1contact,member1email,member1tshirt,member2name,member2contact,member2email,member2tshirt}=req.body
-    
-
     const total=500
      const paid=0
      const selected=false
@@ -52,10 +50,27 @@ const postPC=(req,res)=>{
                 error='Unexpected error'
                 req.flash('error',error)
                 res.redirect('/ProgrammingContest/register')
-
-
              })
          }
      })
-  
 }
+
+const getPCList=(req,res)=>{
+    let all_participant=[]
+    let error =""
+    ProgrammingContest.find().then((data)=>{
+        all_participant=data
+        res.render('programming-contest/list.ejs',{
+            error:req.flash('error'),
+            participants:all_participant,
+        })
+
+    }).catch(()=>{
+        error='Failed to fetch participants'
+        res.render('programming-contest/list.ejs',{
+            error:req.flash('error',error),
+            participants:all_participant,
+        })
+    })
+}
+
