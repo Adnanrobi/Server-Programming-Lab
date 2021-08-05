@@ -162,7 +162,8 @@ const geteditPC=(req,res)=>{
     })
 }
 
-const posteditPC=async(req,res)=>{
+const posteditPC = async (req, res) => {
+    const id =req.params.id
     const {
         teamname,
         institution,
@@ -185,9 +186,11 @@ const posteditPC=async(req,res)=>{
     } = req.body
   
     const data = await ProgrammingContest.findOneAndUpdate(
-        { teamname: teamname, coachname: coachname },
+        {_id:id},
         {
+            teamname,
             institution,
+            coachname,
             coachcontact,
             coachemail,
             coachtshirt,
