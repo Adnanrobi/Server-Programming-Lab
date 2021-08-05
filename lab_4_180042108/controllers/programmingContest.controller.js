@@ -140,3 +140,80 @@ const selectPC=(req,res)=>{
 
     })
 }
+
+const geteditPC=(req,res)=>{
+    const id =req.params.id
+    let participantInfo=[]
+    let error =""
+    ProgrammingContest.findOne({_id:id})
+    .then((data)=>{
+        participantInfo=data
+        res.render('programming-contest/edit.ejs',{
+            error:req.flash('error'),
+            participant:participantInfo,
+        })
+
+    }).catch(()=>{
+        error='Failed to fetch participants'
+        res.render('programming-contest/edit.ejs',{
+            error:req.flash('error',error),
+            participants:participantInfo,
+        })
+    })
+}
+
+const posteditPC=async(req,res)=>{
+    const {
+        teamname,
+        institution,
+        coachname,
+        coachcontact,
+        coachemail,
+        coachtshirt,
+        leadername,
+        leadercontact,
+        leaderemail,
+        leadertshirt,
+        member1name,
+        member1contact,
+        member1email,
+        member1tshirt,
+        member2name,
+        member2contact,
+        member2email,
+        member2tshirt
+    } = req.body
+  
+    const data = await ProgrammingContest.findOneAndUpdate(
+        { teamname: teamname, coachname: coachname },
+        {
+            institution,
+            coachcontact,
+            coachemail,
+            coachtshirt,
+            leadername,
+            leadercontact,
+            leaderemail,
+            leadertshirt,
+            member1name,
+            member1contact,
+            member1email,
+            member1tshirt,
+            member2name,
+            member2contact,
+            member2email,
+            member2tshirt
+        }
+    )
+    .then((data)=>{
+      error="Team has been edited successfully!!"
+        req.flash('error',error)
+        res.redirect("/ProgrammingContest/list")
+    }).catch(()=>{
+        error="Unexpected Error"
+        req.flash('error',error)
+        res.redirect("/ProgrammingContest/list")
+    })
+}
+
+module.exports={getPC,postPC,getPCList,deletePC,paymentDonePC,selectPC,geteditPC,posteditPC}
