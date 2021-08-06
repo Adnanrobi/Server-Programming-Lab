@@ -23,9 +23,10 @@
                 <div class="alert alert-danger"><%=error%></div> 
                 <%}%> <%}%>
                 
+                <% const editContent = "/ProgrammingContest/edit/" + participant._id %>
               <form 
               method="POST"
-              action="/ProgrammingContest/edit"
+              action="<%= editContent %>"
               id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
   
                 <div class="item form-group">

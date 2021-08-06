@@ -164,58 +164,49 @@ const geteditPC=(req,res)=>{
 
 const posteditPC = async (req, res) => {
     const id =req.params.id
-    const {
-        teamname,
-        institution,
-        coachname,
-        coachcontact,
-        coachemail,
-        coachtshirt,
-        leadername,
-        leadercontact,
-        leaderemail,
-        leadertshirt,
-        member1name,
-        member1contact,
-        member1email,
-        member1tshirt,
-        member2name,
-        member2contact,
-        member2email,
-        member2tshirt
-    } = req.body
+    const { teamname, institution, coachname, coachcontact, coachemail, coachtshirt, leadername, leadercontact, leaderemail, leadertshirt,
+        member1name, member1contact, member1email, member1tshirt, member2name, member2contact, member2email, member2tshirt } = req.body
   
-    const data = await ProgrammingContest.findOneAndUpdate(
-        {_id:id},
-        {
-            teamname,
-            institution,
-            coachname,
-            coachcontact,
-            coachemail,
-            coachtshirt,
-            leadername,
-            leadercontact,
-            leaderemail,
-            leadertshirt,
-            member1name,
-            member1contact,
-            member1email,
-            member1tshirt,
-            member2name,
-            member2contact,
-            member2email,
-            member2tshirt
+    ProgrammingContest.findOne({ _id: id }).then( (team) => {
+        if (team) {
+            team.teamname = teamname;
+            team.institution = institution;
+
+            team.coachname = coachname;
+            team.coachcontact = coachcontact;
+            team.coachemail = coachemail;
+            team.coachtshirt = coachtshirt;
+
+            team.leadername = leadername;
+            team.leadercontact = leadercontact;
+            team.leaderemail = leaderemail;
+            team.leadertshirt = leadertshirt;
+
+            team.member1name = member1name;
+            team.member1contact = member1contact;
+            team.member1email = member1email;
+            team.member1tshirt = member1tshirt;
+
+            team.member2name = member2name;
+            team.member2contact = member2contact;
+            team.member2email = member2email;
+            team.member2tshirt = member2tshirt;
+
+            team.save().then(()=>{
+                error="Team has been edited successfully!!"
+                req.flash('error',error)
+                res.redirect("/ProgrammingContest/list")
+            }).catch(()=>{
+                error="Unexpected Error"
+        req.flash('error',error)
+        res.redirect("/ProgrammingContest/list")
+            });
         }
-    )
-    .then((data)=>{
-      error="Team has been edited successfully!!"
+        else {
+            error="Unexpected Error"
         req.flash('error',error)
         res.redirect("/ProgrammingContest/list")
-    }).catch(()=>{
-        error="Unexpected Error"
-        req.flash('error',error)
-        res.redirect("/ProgrammingContest/list")
+        }
     })
 }
 
