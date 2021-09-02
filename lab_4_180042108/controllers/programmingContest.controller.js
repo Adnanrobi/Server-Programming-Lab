@@ -1,4 +1,6 @@
 const ProgrammingContest = require('../models/ProgrammingContest.model')
+const sendMails = require('../config/mailer');
+var crypto = require('crypto');
 
 const getPC=(req,res)=>{
     res.render('programming-contest/register.ejs',{error:req.flash('error')})
@@ -8,9 +10,10 @@ const getPC=(req,res)=>{
 const postPC=(req,res)=>{
     const{teamname,institution,coachname,coachcontact,coachemail,coachtshirt,leadername,leadercontact,leaderemail,leadertshirt,member1name,member1contact,member1email,member1tshirt,member2name,member2contact,member2email,member2tshirt}=req.body
     const total=500
-     const paid=0
-     const selected=false
-     let error=""
+    const paid=0
+    const selected=false
+    let error = ""
+    var verificationCode = crypto.randomBytes(20).toString('hex');
 
      ProgrammingContest.findOne({teamname:teamname,coachname:coachname}).then((participant)=>{
          if(participant){
@@ -41,12 +44,33 @@ const postPC=(req,res)=>{
                 paid,
                 total,
                 selected,
+                verificationCode,
              })
              participant.save().then(()=>{
-                error="Team has been registered successfully"
+                 error = "Team has been registered successfully";
+                 console.log('save ', error);
+                 let allEmails = [
+                   { name: leadername, email: leaderemail },
+                   { name: member1name, email: member1email },
+                   { name: member2name, email: member2email },
+                   { name: coachname, email: coachemail },
+                 ];
+     
+                 allEmails.forEach((person) => {
+                   const mailOptions = {
+                     from: 'teamupp89@gmail.com',
+                     to: person.email,
+                     subject: 'Registration on ICT Fest 2021',
+                     text: `You ${person.name} and your team ${teamname} has successfully registered for ICT fest programming contest. Keep this code safe: ${verificationCode}`,
+                   };
+     
+                   sendMails(mailOptions);
+                 });
+     
                 req.flash('error',error)
                 res.redirect('/ProgrammingContest/register')
-             }).catch(()=>{
+             }).catch((err) => {
+                 console.log(err);
                 error='Unexpected error'
                 req.flash('error',error)
                 res.redirect('/ProgrammingContest/register')
